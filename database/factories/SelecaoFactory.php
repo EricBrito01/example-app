@@ -19,7 +19,7 @@ class SelecaoFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome' => $this->faker->name(),
+            'nome' => $this->faker->word(),
             'fk_clienteId' => Cliente::pluck('id')->random(),
             'fk_candidatoId'=> Candidato::pluck('id')->random(),
         ];
