@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Candidato;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Validator;
+use Exception;
 
 class CandidatoController extends Controller
 {
@@ -13,8 +14,7 @@ class CandidatoController extends Controller
      */
     public function index()
     {
-        Carbon::setLocale('pt-BR');
-        $candidatos = Candidato::paginate(10);
+        $candidatos = Candidato::orderBy('id', 'desc')->paginate(10);
         return view("pages.candidatos.index", compact("candidatos"));
     }
 
@@ -23,7 +23,7 @@ class CandidatoController extends Controller
      */
     public function create()
     {
-        //
+        return view("pages.candidatos.create");
     }
 
     /**
@@ -31,38 +31,85 @@ class CandidatoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        try {
+            $request->merge([
+                'cpf' => preg_replace('/[^0-9]/', '', $request->input('cpf'))
+            ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Candidato $candidato)
-    {
-        //
+            $validator = Validator::make($request->all(), [
+                'nome' => 'required|string|max:255',
+                'cpf' => 'required|string|size:11|unique:candidatos',
+                'logradouro' => 'required|string|max:255',
+            ], [
+                'required' => 'O campo :attribute é obrigatório.',
+                'string' => 'O conteúdo do campo :attribute deve ser uma string.',
+                'max' => 'O campo :attribute deve ter no máximo :max caracteres.',
+                'size' => 'O campo :attribute deve ter :size caracteres.',
+                'unique' => 'O conteúdo do campo :attribute já foi cadastrado.',
+            ]);
+
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first());
+            }
+
+            Candidato::create($request->all());
+            return redirect()->route("candidatos")->with("success", "Cadastrado com Sucesso!");
+        } catch (\Throwable $th) {
+            return redirect()->route("candidatos.create")->with("error", $th->getMessage())->withInput($request->input());
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Candidato $candidato)
+    public function edit($id)
     {
-        //
+        $candidato = Candidato::findOrFail($id);
+        return view("pages.candidatos.edit", compact("candidato"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Candidato $candidato)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $request->merge([
+                'cpf' => preg_replace('/[^0-9]/', '', $request->input('cpf'))
+            ]);
+
+            $validator = Validator::make($request->all(), [
+                'nome' => 'required|string|max:255',
+                'cpf' => 'required|string|size:11|unique:candidatos,cpf,' . $id,
+                'logradouro' => 'required|string|max:255',
+            ], [
+                'required' => 'O campo :attribute é obrigatório.',
+                'string' => 'O conteúdo do campo :attribute deve ser uma string.',
+                'max' => 'O campo :attribute deve ter no máximo :max caracteres.',
+                'size' => 'O campo :attribute deve ter :size caracteres.',
+                'unique' => 'O conteúdo do campo :attribute já foi cadastrado.',
+            ]);
+
+            if ($validator->fails()) {
+                throw new Exception($validator->errors()->first());
+            }
+
+            $candidato = Candidato::findOrFail($id);
+            $candidato->update($request->all());
+            return redirect()->route("candidatos")->with("success", "Atualizado com Sucesso!");
+        } catch (\Throwable $th) {
+            return redirect()->route("candidatos.edit", $id)->with("error", $th->getMessage())->withInput();
+        }
     }
 
+
     /**
-     * Remove the specified resource from storage.
+     * Delete the specified resource in storage.
      */
-    public function destroy(Candidato $candidato)
+    public function delete($id)
     {
-        //
+        $candidato = Candidato::findOrFail($id);
+        $candidato->delete();
+        return redirect()->route("candidatos")->with("success", "Excluido com Sucesso!");
     }
 }

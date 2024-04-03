@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', $candidato->nome)
+@section('title', 'Novo')
 
 @section('content')
     @if (session('error'))
@@ -14,22 +14,21 @@
         </script>
     @endif
 
-    <h3>Editar Candidato</h3>
+    <h3>Novo Candidato</h3>
     <hr><br>
-    <form action="{{ route('candidatos.update', $candidato->id) }}" method="POST" class="col s12">
+    <form action="{{ route('candidatos.store') }}" method="POST" class="col s12">
         @csrf
-        @method('PUT')
         <div class="row">
             <div class="input-field col s6">
-                <input name="nome" type="text" value="{{ $candidato->nome }}">
+                <input name="nome" type="text" value="{{ old('nome') }}">
                 <label for="nome">Nome</label>
             </div>
             <div class="input-field col s6">
-                <input name="cpf" type="number" value="{{ $candidato->cpf }}">
+                <input name="cpf" type="number" value="{{ old('cpf') }}">
                 <label for="cpf">CPF</label>
             </div>
             <div class="input-field col s12">
-                <input name="logradouro" type="text" value="{{ $candidato->logradouro }}">
+                <input name="logradouro" type="text" value="{{ old('logradouro') }}">
                 <label for="logradouro">Logradouro</label>
             </div>
         </div>
