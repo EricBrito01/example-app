@@ -14,27 +14,23 @@
         </script>
     @endif
 
-    <h3>Novo Candidato</h3>
+    <h3>Novo Cliente</h3>
     <hr><br>
-    <form action="{{ route('candidatos.store') }}" method="POST" class="col s12">
+    <form action="{{ route('clientes.store') }}" method="POST" class="col s12">
         @csrf
         <div class="row">
             <div class="input-field col s6">
-                <input name="nome" type="text" value="{{ old('nome') }}">
-                <label for="nome">Nome</label>
+                <input name="razaoSocial" type="text" value="{{ old('razaoSocial') }}">
+                <label for="razaoSocial">Razão Social</label>
             </div>
             <div class="input-field col s6">
-                <input name="cpf" type="number" value="{{ old('cpf') }}">
-                <label for="cpf">CPF</label>
+                <input name="cnpj" type="number" value="{{ old('cnpj') }}">
+                <label for="cnpj">CNPJ</label>
                 <span class="helper-text" data-error="wrong" data-success="right">Digite somente números</span>
-            </div>
-            <div class="input-field col s12">
-                <input name="logradouro" type="text" value="{{ old('logradouro') }}">
-                <label for="logradouro">Logradouro</label>
             </div>
         </div>
         <div class="row right">
-            <a class="btn-large waves-effect waves-light red" href="{{ route('candidatos') }}">Voltar
+            <a class="btn-large waves-effect waves-light red" href="{{ route('clientes') }}">Voltar
                 <i class="material-icons left">arrow_back</i>
             </a>
             <button class="btn-large waves-effect waves-light green" type="submit">Salvar

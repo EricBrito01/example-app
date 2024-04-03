@@ -27,6 +27,7 @@
             <div class="input-field col s6">
                 <input name="cpf" type="number" value="{{ $candidato->cpf }}">
                 <label for="cpf">CPF</label>
+                <span class="helper-text" data-error="wrong" data-success="right">Digite somente números</span>
             </div>
             <div class="input-field col s12">
                 <input name="logradouro" type="text" value="{{ $candidato->logradouro }}">

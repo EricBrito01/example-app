@@ -15,8 +15,8 @@ class Candidato extends Model
 
     /**
      * @var array
-    */
-    protected $dates = ['created_at','updated_at','deleted_at'];
+     */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     protected $fillable = [
         'nome',
@@ -33,5 +33,16 @@ class Candidato extends Model
     {
         parent::__construct($attributes);
         Carbon::setLocale('pt-BR');
+    }
+
+
+    public function formatCPF()
+    {
+        $cpf = preg_replace('/[^0-9]/', '', $this->cpf);
+        if (strlen($cpf) != 11) {
+            return 'CPF inválido';
+        }
+
+        return substr($cpf, 0, 3) . '.' . substr($cpf, 3, 3) . '.' . substr($cpf, 6, 3) . '-' . substr($cpf, 9, 2);
     }
 }

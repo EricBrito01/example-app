@@ -52,7 +52,7 @@
                         </form>
                     </td>
                     <td>{{ $candidato->nome }}</td>
-                    <td>{{ $candidato->cpf }}</td>
+                    <td>{{ $candidato->formatCPF() }}</td>
                     <td>{{ $candidato->logradouro }}</td>
                     <td>{{ $candidato->created_at->diffForHumans() }}</td>
                     <td>{{ $candidato->updated_at->diffForHumans() }}</td>
